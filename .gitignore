@@ -1,3 +1,6 @@
+# Platform
+.DS_Store
+
 # Debug 
 *.[dD]SYM
 
@@ -11,3 +14,4 @@ loxc
 
 # Files
 *.lox
+*probe*

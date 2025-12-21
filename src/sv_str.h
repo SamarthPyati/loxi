@@ -5,7 +5,7 @@
 #include <string.h>
 
 #ifndef SV_STR_DEF
-#define SV_STR_DEF
+#define SV_STR_DEF static inline
 #endif // SV_STR_DEF
 
 typedef struct {

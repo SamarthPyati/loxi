@@ -1,37 +1,37 @@
-CC=cc
-OPT=-O0
-DEBUG=1
-INCLUDES=-I.
-CFLAGS=-Wall -Wextra -std=c17 $(OPT) $(INCLUDES)
+OPT_LEVEL:=0
+DEBUG:=1
+CPPFLAGS:=-Isrc
+CFLAGS:=-Wall -Wextra -std=c17 $(CPPFLAGS)
 
-DEPS=interpreter.c
 
-TARGET=loxc
-
-all: build 
-
-build: $(DEPS)
 ifeq ($(strip $(DEBUG)), 1)
-	$(CC) $(CFLAGS) -g -o $(TARGET) $<
-else
-	$(CC) $(CFLAGS) -o $(TARGET) $< 
+CFLAGS += -g -DDEBUG
 endif
 
-# Doing platform check
-platform_check: 
-	$(info System  : $(shell uname -m))
-	$(info Platform: $(shell uname -s))		
+TARGET:=loxc
+SRC := $(wildcard src/*.c)
+OBJ := $(patsubst src/%.c, build/%.o, $(SRC))
+
+.PHONY: all
+all: $(TARGET)
+
+build/%.o: src/%.c
+	$(CC) $(CFLAGS) -O$(OPT_LEVEL) -c -o $@ $<
+
+$(TARGET): $(OBJ)
+	$(CC) $(CFLAGS) -O$(OPT_LEVEL) -o $@ $^
 
 platform:=$(shell uname -s)
 
 .PHONY: clean
 clean: $(TARGET)
 	@echo "Removing build artifacts ..."
-	@rm $(TARGET)
+	@rm -f $(TARGET)
+	@rm -rf build
 
 ifeq ($(platform), Darwin)
 	@echo "Platform: $(platform)"
 	@rm -rf $(TARGET).dSYM
 else 
-	($error "Unknown platform: $(platform)")
+	($error "Unsupported platform: $(platform)")
 endif
