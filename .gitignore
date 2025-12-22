@@ -15,3 +15,6 @@ loxi
 # Files
 *.lox
 *probe*
+
+# Folders
+build/

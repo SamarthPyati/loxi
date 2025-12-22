@@ -11,19 +11,25 @@ TARGET:=loxi
 SRC := $(wildcard src/*.c)
 OBJ := $(patsubst src/%.c, build/%.o, $(SRC))
 
-.PHONY: all
+# TIP: Ensure the build directory exists before creating object files
+$(OBJ): | build
+
+.PHONY: all build clean
 all: $(TARGET)
+
+build: 
+	@mkdir -p build
 
 build/%.o: src/%.c
 	$(CC) $(CFLAGS) -O$(OPT_LEVEL) -c -o $@ $<
 
-$(TARGET): $(OBJ)
+$(TARGET): $(OBJ) | build
 	$(CC) $(CFLAGS) -O$(OPT_LEVEL) -o $@ $^
 
 platform:=$(shell uname -s)
 
 .PHONY: clean
-clean: $(TARGET)
+clean:
 	@echo "Removing build artifacts ..."
 	@rm -f $(TARGET)
 	@rm -rf build
@@ -31,6 +37,6 @@ clean: $(TARGET)
 ifeq ($(platform), Darwin)
 	@echo "Platform: $(platform)"
 	@rm -rf $(TARGET).dSYM
-else 
-	($error "Unsupported platform: $(platform)")
+else
+	$(error Unsupported platform: $(platform))
 endif
