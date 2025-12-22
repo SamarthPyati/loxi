@@ -7,7 +7,7 @@
 # Executables 
 sint
 *.out
-loxc
+loxi
 
 # Editor 
 .vscode/

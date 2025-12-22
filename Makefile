@@ -7,7 +7,7 @@ ifeq ($(strip $(DEBUG)), 1)
 CFLAGS += -g -DDEBUG
 endif
 
-TARGET:=loxc
+TARGET:=loxi
 SRC := $(wildcard src/*.c)
 OBJ := $(patsubst src/%.c, build/%.o, $(SRC))
 
