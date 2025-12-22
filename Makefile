@@ -3,7 +3,6 @@ DEBUG:=1
 CPPFLAGS:=-Isrc
 CFLAGS:=-Wall -Wextra -std=c17 $(CPPFLAGS)
 
-
 ifeq ($(strip $(DEBUG)), 1)
 CFLAGS += -g -DDEBUG
 endif

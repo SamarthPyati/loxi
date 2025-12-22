@@ -3,12 +3,9 @@
 #include <string.h>
 
 #define SV_STR_IMPLEMENTATION
-#include "sv_str.h"
+#include <sv_str.h>
 
-#define UNUSED(x) (void)(x)
-#define ArrayLen(xs) sizeof((xs)) / sizeof(*(xs))
-
-#define KB(b) (b) * 1024
+#include <utils.h>
 
 #define STATIC_BUF_CAP  KB(10)
 #define MAX_TOKENS      KB(10)
@@ -43,13 +40,12 @@ static size_t __load_file_to_buf(const char *fname, char *buf) {
 }
 
 int main(int argc, char *argv[]) {
-    if (argc != 2) {
+    if (argc > 2) {
         fprintf(stderr, "Usage: %s [script.lox]\n", argv[0]);
         exit(EXIT_FAILURE);
     }
 
     const char *file = argv[1];
-
     static char buf[STATIC_BUF_CAP] = {0};
     size_t length = 0;
 
@@ -71,12 +67,39 @@ int main(int argc, char *argv[]) {
             tokens[idx++] = svtoken;
             printf("%zu: " SV_Fmt "\n", idx, SV_Arg(svtoken));
         }
-
+        
+        printf("File %s, Length: %zu\n", file, length);
     } else {
+        char line[KB(1)];
         // REPL
-        memset(buf, 0, sizeof(*buf) * ArrayLen(buf));
-    }
+        for (;;) {
+            printf("> ");
+            fflush(stdout);
 
-    printf("File %s, Length: %zu\n", file, length);
+            if (fgets(line, sizeof(line), stdin) == NULL) {
+                printf("\n");
+                break;
+            }
+
+            // strip trailing newline
+            size_t len = strlen(line);
+            if (len > 0 && line[len - 1] == '\n') line[len - 1] = '\0';
+
+            if (strcmp(line, "exit") == 0) break;
+
+            // tokenize
+            char *cursor = line;
+            char *token;
+            size_t idx = 0;
+            while ((token = strsep(&cursor, sep)) != NULL) {
+                StringView svtoken = sv_from_cstr(token);
+                svtoken = sv_trim(svtoken);
+                if (svtoken.count == 0) continue;
+                tokens[idx++] = svtoken;
+                printf("%zu: " SV_Fmt "\n", idx, SV_Arg(svtoken));
+                if (idx >= MAX_TOKENS) break;
+            }
+        }
+    }
     return 0;
 }
