@@ -5,7 +5,7 @@
 #include <string.h>
 
 #ifndef SV_STR_DEF
-#define SV_STR_DEF static inline
+#define SV_STR_DEF
 #endif // SV_STR_DEF
 
 typedef struct {
@@ -21,7 +21,7 @@ SV_STR_DEF StringView sv_from_cstr(const char *str);
 SV_STR_DEF StringView sv_trim_left (StringView str);
 SV_STR_DEF StringView sv_trim_right(StringView str);
 SV_STR_DEF StringView sv_trim(StringView str);
-
+SV_STR_DEF StringView sv_chop(StringView str, size_t n);
 #endif //  SV_STR_H_
 
 #ifdef SV_STR_IMPLEMENTATION
@@ -38,6 +38,7 @@ SV_STR_DEF StringView sv_from_cstr(const char *str) {
 }
 
 SV_STR_DEF StringView sv_trim_left(StringView str) {
+    /* Trim whitespace on left */
     size_t i = 0;
     while (i < str.count && isspace((unsigned char)str.data[i])) {
         i++;
@@ -46,6 +47,7 @@ SV_STR_DEF StringView sv_trim_left(StringView str) {
 }
 
 SV_STR_DEF StringView sv_trim_right(StringView str) {
+    /* Trim whitespace on left */
     size_t i = str.count;
     while (i > 0 && isspace((unsigned char)str.data[i - 1])) {
         i--;
@@ -54,7 +56,13 @@ SV_STR_DEF StringView sv_trim_right(StringView str) {
 }
 
 SV_STR_DEF StringView sv_trim(StringView str) {
+    /* Trim whitespace for a StringView */
     return sv_trim_right(sv_trim_left(str));
+}
+
+SV_STR_DEF StringView sv_chop(StringView str, size_t n) {
+    /* Chop slice of str till n characters */
+    return sv_from_parts(str.data, n);
 }
 
 #endif // SV_STR_IMPLEMENTATION

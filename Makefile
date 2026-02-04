@@ -1,15 +1,15 @@
-OPT_LEVEL:=0
-DEBUG:=1
-CPPFLAGS:=-Isrc
-CFLAGS:=-Wall -Wextra -std=c17 $(CPPFLAGS)
+OPT_LEVEL	:= 0
+DEBUG		:= 1
+CPPFLAGS	:= -Isrc
+CFLAGS		:= -Wall -Wextra -std=c17 $(CPPFLAGS)
 
 ifeq ($(strip $(DEBUG)), 1)
 CFLAGS += -g -DDEBUG
 endif
 
-TARGET:=loxi
-SRC := $(wildcard src/*.c)
-OBJ := $(patsubst src/%.c, build/%.o, $(SRC))
+TARGET	:= loxi
+SRC 	:= $(wildcard src/*.c)
+OBJ 	:= $(patsubst src/%.c, build/%.o, $(SRC))
 
 # TIP: Ensure the build directory exists before creating object files
 $(OBJ): | build
