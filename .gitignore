@@ -12,6 +12,10 @@ loxi
 # Editor 
 .vscode/
 
+# Temp 
+test.c
+test
+
 # Files
 *.lox
 *probe*
