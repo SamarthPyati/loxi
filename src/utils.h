@@ -6,6 +6,8 @@
 
 #define STMT(S) do { S } while (0)
 
+#define Stringify(x) #x
+
 #define UNUSED(value) (void)(value)
 #define NOB_TODO(message) STMT (                                            \
     fprintf(stderr, "%s:%d: TODO: %s\n", __FILE__, __LINE__, message);      \
